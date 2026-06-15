@@ -1,0 +1,117 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// Enum for User Roles
+enum Role {
+  STUDENT
+  ADMIN
+}
+
+// User Model
+model User {
+  id        String     @id @default(cuid())
+  name      String
+  email     String     @unique
+  password  String
+  role      Role       @default(STUDENT)
+  isVerified Boolean    @default(false)
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+
+  // Relations
+  registrations Registration[]
+  otpVerifications OTPVerification[]
+
+  @@index([email])
+}
+
+// Event Model
+model Event {
+  id          String     @id @default(cuid())
+  title       String
+  description String     @db.Text
+  category    String
+  location    String
+  eventDate   DateTime
+  capacity    Int        @default(100)
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+
+  // Relations
+  registrations Registration[]
+
+  @@index([eventDate])
+  @@index([category])
+}
+
+// Registration Model - with unique constraint to prevent duplicate registrations
+model Registration {
+  id         String     @id @default(cuid())
+  userId     String
+  eventId    String
+  registeredAt DateTime  @default(now())
+  status     String     @default("confirmed") // confirmed, pending, cancelled
+  createdAt  DateTime   @default(now())
+  updatedAt  DateTime   @updatedAt
+
+  // Relations
+  user       User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  event      Event      @relation(fields: [eventId], references: [id], onDelete: Cascade)
+
+  // Unique constraint to prevent duplicate registrations
+  @@unique([userId, eventId])
+  @@index([userId])
+  @@index([eventId])
+}
+
+// Announcement Model
+model Announcement {
+  id        String     @id @default(cuid())
+  title     String
+  content   String     @db.Text
+  priority  String     @default("low") // low, medium, high
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+
+  @@index([createdAt])
+}
+
+// Feedback Model
+model Feedback {
+  id        String     @id @default(cuid())
+  name      String
+  email     String
+  message   String     @db.Text
+  rating    Int?       // Optional rating from 1-5
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+
+  @@index([email])
+  @@index([createdAt])
+}
+
+// OTP Verification Model
+model OTPVerification {
+  id        String     @id @default(cuid())
+  email     String
+  otp       String
+  expiresAt DateTime
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+  isUsed    Boolean    @default(false)
+
+  // Relations
+  user      User?      @relation(fields: [email], references: [email], onDelete: Cascade)
+
+  @@index([email])
+  @@index([expiresAt])
+}
