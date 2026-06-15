@@ -1,15 +1,9 @@
-import { auth } from "@/auth";
-import { NextResponse } from "next/server";
+import NextAuth from "next-auth";
+import authConfig from "@/auth.config";
 
-export default auth((req) => {
-  const isLoggedIn = !!req.auth;
+export const { auth: middleware } = NextAuth(authConfig);
 
-  if (!isLoggedIn) {
-    return NextResponse.redirect(
-      new URL("/auth/login", req.url)
-    );
-  }
-});
+export default middleware;
 
 export const config = {
   matcher: [
