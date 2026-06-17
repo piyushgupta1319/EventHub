@@ -163,7 +163,7 @@ export async function loginUser(
 
 const isPasswordValid = await bcrypt.compare(
   password,
-  user.password
+  user.password!
 );
 
     if (!isPasswordValid) {
