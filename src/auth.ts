@@ -13,7 +13,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
   adapter: PrismaAdapter(prisma as any),
 
   session: {
-    strategy: "database",
+    strategy: "jwt",
     maxAge: 30 * 24 * 60 * 60, // 30 days
   },
 
@@ -81,14 +81,14 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       return token;
     },
 
-    async session({ session, user }) {
-      if (session.user) {
-        (session.user as any).id = user.id;
-        (session.user as any).role = (user as any).role;
-      }
+    async session({ session, token }) {
+  if (session.user) {
+    (session.user as any).id = token.sub;
+    (session.user as any).role = token.role;
+  }
 
-      return session;
-    },
+  return session;
+},
 
     async signIn({ user, account }) {
       // Allow sign in with any provider
