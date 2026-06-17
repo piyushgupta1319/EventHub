@@ -10,12 +10,14 @@ export default function LoginPage() {
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
 
   const handleSubmit = async (e: React.FormEvent) => {
   e.preventDefault();
 
   setError("");
+  setIsLoading(true);
 
   const result = await signIn("credentials", {
     email,
@@ -25,11 +27,22 @@ export default function LoginPage() {
 
   if (result?.error) {
     setError("Invalid email or password");
+    setIsLoading(false);
     return;
   }
 
   router.push("/dashboard");
 };
+
+  const handleGoogleSignIn = async () => {
+    setIsLoading(true);
+    await signIn("google", { redirect: true, redirectTo: "/dashboard" });
+  };
+
+  const handleFacebookSignIn = async () => {
+    setIsLoading(true);
+    await signIn("facebook", { redirect: true, redirectTo: "/dashboard" });
+  };
 
   return (
     <div className="min-h-screen flex">
@@ -65,6 +78,7 @@ export default function LoginPage() {
                 required
                 className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-blue-600 focus:outline-none transition-all text-gray-900 placeholder-gray-500"
                 placeholder="you@college.edu"
+                disabled={isLoading}
               />
             </div>
 
@@ -79,11 +93,13 @@ export default function LoginPage() {
                   required
                   className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-blue-600 focus:outline-none transition-all text-gray-900 placeholder-gray-500"
                   placeholder="••••••••"
+                  disabled={isLoading}
                 />
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
                   className="absolute right-3 top-3 text-gray-600 hover:text-gray-900"
+                  disabled={isLoading}
                 >
                   {showPassword ? '👁️' : '👁️‍🗨️'}
                 </button>
@@ -93,7 +109,7 @@ export default function LoginPage() {
             {/* Remember Me & Forgot Password */}
             <div className="flex justify-between items-center text-sm">
               <label className="flex items-center gap-2 text-gray-700">
-                <input type="checkbox" className="w-4 h-4" />
+                <input type="checkbox" className="w-4 h-4" disabled={isLoading} />
                 Remember me
               </label>
               <Link href="/auth/forgot-password" className="text-blue-600 font-semibold hover:underline">
@@ -104,9 +120,10 @@ export default function LoginPage() {
             {/* Sign In Button */}
             <button
               type="submit"
-              className="w-full bg-gradient-to-r from-blue-600 to-blue-700 text-white py-3 rounded-lg font-bold hover:from-blue-700 hover:to-blue-800 transition-all shadow-lg hover:shadow-xl"
+              disabled={isLoading}
+              className="w-full bg-gradient-to-r from-blue-600 to-blue-700 text-white py-3 rounded-lg font-bold hover:from-blue-700 hover:to-blue-800 transition-all shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              Sign In
+              {isLoading ? 'Signing in...' : 'Sign In'}
             </button>
           </form>
 
@@ -119,11 +136,21 @@ export default function LoginPage() {
 
           {/* Social Login */}
           <div className="grid grid-cols-2 gap-4 mb-6">
-            <button type="button" className="flex items-center justify-center gap-2 border-2 border-gray-200 rounded-lg py-2 hover:border-blue-600 transition-colors">
+            <button 
+              type="button" 
+              onClick={handleFacebookSignIn}
+              disabled={isLoading}
+              className="flex items-center justify-center gap-2 border-2 border-gray-200 rounded-lg py-2 hover:border-blue-600 hover:bg-blue-50 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            >
               <span className="text-xl">📘</span>
               <span className="text-sm font-semibold text-gray-700">Facebook</span>
             </button>
-            <button type="button" className="flex items-center justify-center gap-2 border-2 border-gray-200 rounded-lg py-2 hover:border-blue-600 transition-colors">
+            <button 
+              type="button" 
+              onClick={handleGoogleSignIn}
+              disabled={isLoading}
+              className="flex items-center justify-center gap-2 border-2 border-gray-200 rounded-lg py-2 hover:border-blue-600 hover:bg-blue-50 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            >
               <span className="text-xl">📧</span>
               <span className="text-sm font-semibold text-gray-700">Google</span>
             </button>

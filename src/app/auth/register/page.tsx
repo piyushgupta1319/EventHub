@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from "next/navigation";
+import { signIn } from "next-auth/react";
 import { registerUser } from "@/actions/authActions";
 
 export default function RegisterPage() {
@@ -17,6 +18,7 @@ export default function RegisterPage() {
     role: 'STUDENT',
   });
   const [showPassword, setShowPassword] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
 
   const handleChange = (
@@ -46,6 +48,7 @@ export default function RegisterPage() {
     return;
   }
 
+  setIsLoading(true);
   const result = await registerUser(
     formData.name,
     formData.email,
@@ -61,8 +64,19 @@ export default function RegisterPage() {
     );
   } else {
     alert(result.message);
+    setIsLoading(false);
   }
 };
+
+  const handleGoogleSignUp = async () => {
+    setIsLoading(true);
+    await signIn("google", { redirect: true, redirectTo: "/dashboard" });
+  };
+
+  const handleFacebookSignUp = async () => {
+    setIsLoading(true);
+    await signIn("facebook", { redirect: true, redirectTo: "/dashboard" });
+  };
 
   return (
     <div className="min-h-screen flex">
@@ -89,7 +103,8 @@ export default function RegisterPage() {
                 value={formData.name}
                 onChange={handleChange}
                 required
-                className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-blue-600 focus:outline-none transition-all text-gray-900 placeholder-gray-500"
+                disabled={isLoading}
+                className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-blue-600 focus:outline-none transition-all text-gray-900 placeholder-gray-500 disabled:opacity-50 disabled:cursor-not-allowed"
                 placeholder="Your full name"
               />
             </div>
@@ -103,7 +118,8 @@ export default function RegisterPage() {
                 value={formData.email}
                 onChange={handleChange}
                 required
-                className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-blue-600 focus:outline-none transition-all text-gray-900 placeholder-gray-500"
+                disabled={isLoading}
+                className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-blue-600 focus:outline-none transition-all text-gray-900 placeholder-gray-500 disabled:opacity-50 disabled:cursor-not-allowed"
                 placeholder="you@college.edu"
               />
             </div>
@@ -117,7 +133,8 @@ export default function RegisterPage() {
                   name="university"
                   value={formData.university}
                   onChange={handleChange}
-                  className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-blue-600 focus:outline-none transition-all text-gray-900 placeholder-gray-500"
+                  disabled={isLoading}
+                  className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-blue-600 focus:outline-none transition-all text-gray-900 placeholder-gray-500 disabled:opacity-50 disabled:cursor-not-allowed"
                   placeholder="Your university"
                 />
               </div>
@@ -128,7 +145,8 @@ export default function RegisterPage() {
                   name="department"
                   value={formData.department}
                   onChange={handleChange}
-                  className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-blue-600 focus:outline-none transition-all text-gray-900 placeholder-gray-500"
+                  disabled={isLoading}
+                  className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-blue-600 focus:outline-none transition-all text-gray-900 placeholder-gray-500 disabled:opacity-50 disabled:cursor-not-allowed"
                   placeholder="Your department"
                 />
               </div>
@@ -144,13 +162,15 @@ export default function RegisterPage() {
                   value={formData.password}
                   onChange={handleChange}
                   required
-                  className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-blue-600 focus:outline-none transition-all text-gray-900 placeholder-gray-500"
+                  disabled={isLoading}
+                  className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-blue-600 focus:outline-none transition-all text-gray-900 placeholder-gray-500 disabled:opacity-50 disabled:cursor-not-allowed"
                   placeholder="••••••••"
                 />
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-3 top-3 text-gray-600 hover:text-gray-900"
+                  disabled={isLoading}
+                  className="absolute right-3 top-3 text-gray-600 hover:text-gray-900 disabled:opacity-50"
                 >
                   {showPassword ? '👁️' : '👁️‍🗨️'}
                 </button>
@@ -166,7 +186,8 @@ export default function RegisterPage() {
                 value={formData.confirmPassword}
                 onChange={handleChange}
                 required
-                className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-blue-600 focus:outline-none transition-all text-gray-900 placeholder-gray-500"
+                disabled={isLoading}
+                className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-blue-600 focus:outline-none transition-all text-gray-900 placeholder-gray-500 disabled:opacity-50 disabled:cursor-not-allowed"
                 placeholder="••••••••"
               />
             </div>
@@ -178,7 +199,8 @@ export default function RegisterPage() {
                 name="role"
                 value={formData.role}
                 onChange={handleChange}
-                className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-blue-600 focus:outline-none transition-all text-gray-900"
+                disabled={isLoading}
+                className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-blue-600 focus:outline-none transition-all text-gray-900 disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 <option value="STUDENT">Student</option>
                 <option value="ADMIN">Admin</option>
@@ -193,7 +215,8 @@ export default function RegisterPage() {
                 id="terms"
                 checked={formData.agreedToTerms}
                 onChange={handleChange}
-                className="w-4 h-4 mt-1"
+                disabled={isLoading}
+                className="w-4 h-4 mt-1 disabled:opacity-50 disabled:cursor-not-allowed"
               />
               <label htmlFor="terms" className="text-sm text-gray-600">
                 I agree to the{' '}
@@ -210,9 +233,10 @@ export default function RegisterPage() {
             {/* Sign Up Button */}
             <button
               type="submit"
-              className="w-full bg-gradient-to-r from-blue-600 to-blue-700 text-white py-3 rounded-lg font-bold hover:from-blue-700 hover:to-blue-800 transition-all shadow-lg hover:shadow-xl"
+              disabled={isLoading}
+              className="w-full bg-gradient-to-r from-blue-600 to-blue-700 text-white py-3 rounded-lg font-bold hover:from-blue-700 hover:to-blue-800 transition-all shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              Create Account
+              {isLoading ? 'Creating Account...' : 'Create Account'}
             </button>
           </form>
 
@@ -225,11 +249,21 @@ export default function RegisterPage() {
 
           {/* Social Register */}
           <div className="grid grid-cols-2 gap-4 mb-4">
-            <button className="flex items-center justify-center gap-2 border-2 border-gray-200 rounded-lg py-2 hover:border-blue-600 transition-colors">
+            <button 
+              type="button"
+              onClick={handleFacebookSignUp}
+              disabled={isLoading}
+              className="flex items-center justify-center gap-2 border-2 border-gray-200 rounded-lg py-2 hover:border-blue-600 hover:bg-blue-50 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            >
               <span className="text-xl">📘</span>
               <span className="text-sm font-semibold text-gray-700">Facebook</span>
             </button>
-            <button className="flex items-center justify-center gap-2 border-2 border-gray-200 rounded-lg py-2 hover:border-blue-600 transition-colors">
+            <button 
+              type="button"
+              onClick={handleGoogleSignUp}
+              disabled={isLoading}
+              className="flex items-center justify-center gap-2 border-2 border-gray-200 rounded-lg py-2 hover:border-blue-600 hover:bg-blue-50 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            >
               <span className="text-xl">📧</span>
               <span className="text-sm font-semibold text-gray-700">Google</span>
             </button>
