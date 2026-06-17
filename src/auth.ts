@@ -10,7 +10,7 @@ import authConfig from "./auth.config";
 export const { handlers, signIn, signOut, auth } = NextAuth({
   ...authConfig,
   
-  adapter: PrismaAdapter(prisma as any),
+  // adapter: PrismaAdapter(prisma as any),
 
   session: {
     strategy: "jwt",
@@ -73,26 +73,25 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
   },
 
   callbacks: {
-    async jwt({ token, user, account }) {
-      if (user) {
-        token.role = (user as any).role;
-      }
+  async jwt({ token, user }) {
+    if (user) {
+      token.role = (user as any).role;
+    }
 
-      return token;
-    },
-
-    async session({ session, token }) {
-  if (session.user) {
-    (session.user as any).id = token.sub;
-    (session.user as any).role = token.role;
-  }
-
-  return session;
-},
-
-    async signIn({ user, account }) {
-      // Allow sign in with any provider
-      return true;
-    },
+    return token;
   },
+
+  async session({ session, token }) {
+    if (session.user) {
+      (session.user as any).id = token.sub;
+      (session.user as any).role = token.role;
+    }
+
+    return session;
+  },
+
+  async signIn() {
+    return true;
+  },
+},
 });
