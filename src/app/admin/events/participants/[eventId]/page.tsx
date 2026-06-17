@@ -79,7 +79,7 @@ export default async function ParticipantsPage({
 
               <div className="w-16 h-16 rounded-full bg-slate-900 text-white flex items-center justify-center text-2xl font-bold mb-6">
 
-                {registration.user.name[0]}
+                {registration.user.name?.[0] || "U"}
 
               </div>
 

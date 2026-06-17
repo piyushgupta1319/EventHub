@@ -129,7 +129,7 @@ export default async function CertificatesPage() {
       <CertificateCard
       key={certificate.id}
       certificateId={certificate.certificateId}
-      userName={certificate.userName}
+      userName={certificate.userName ?? "Unknown User"}
       title={certificate.title}
       issuer={certificate.issuer}
       date={certificate.date}
