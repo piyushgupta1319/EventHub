@@ -153,10 +153,18 @@ export async function loginUser(
       };
     }
 
-    const isPasswordValid = await bcrypt.compare(
-      password,
-      user.password
-    );
+    if (!user.password) {
+  return {
+    success: false,
+    message: "Password not found",
+    user: null,
+  };
+}
+
+const isPasswordValid = await bcrypt.compare(
+  password,
+  user.password
+);
 
     if (!isPasswordValid) {
       return {
