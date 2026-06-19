@@ -13,7 +13,7 @@ export default function RelatedEvents({ events }: Props) {
   return (
     <div className="bg-white rounded-[32px] border border-slate-200 shadow-sm p-10">
 
-      <h2 className="text-3xl font-bold mb-10">
+      <h2 className="text-3xl font-bold mb-10 text-gray-900">
         Related Events
       </h2>
 

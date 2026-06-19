@@ -7,11 +7,7 @@ import EventHighlights from "@/components/event-details/EventHighlights";
 import EventRegisterCard from "@/components/event-details/EventRegisterCard";
 import OrganizerCard from "@/components/event-details/OrganizerCard";
 import RelatedEvents from "@/components/event-details/RelatedEvents";
-import VenueCard from "@/components/event-details/VenueCard";
-import SpeakersSection from "@/components/event-details/SpeakersSection";
-import EventSchedule from "@/components/event-details/EventSchedule";
 import EventCountdown from "@/components/event-details/EventCountdown";
-import EventFAQ from "@/components/event-details/EventFAQ";
 
 
 interface Props {
@@ -80,16 +76,8 @@ export default async function EventDetailsPage({
             />
 
             <EventHighlights />
-            <SpeakersSection />
-            <EventSchedule />
-
 
             <OrganizerCard />
-
-            <VenueCard
-  location={event.location}
-/>
-<EventFAQ />
 
             <RelatedEvents  events={relatedEvents} />
 

@@ -6,7 +6,7 @@ export default function OrganizerCard() {
 
     <div className="bg-white rounded-[32px] border border-slate-200 shadow-sm p-10">
 
-      <h2 className="text-3xl font-bold mb-8">
+      <h2 className="text-3xl font-bold mb-8 text-gray-900">
         Organizer
       </h2>
 
