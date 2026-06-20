@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Menu } from 'lucide-react';
+import { Menu, Sparkles } from 'lucide-react';
 import { useState } from 'react';
 import AuthSection from './AuthSection';
 
@@ -34,7 +34,7 @@ export default function Navbar() {
   ];
 
   return (
-    <header className="sticky top-0 z-50 bg-white/90 backdrop-blur-xl border-b border-slate-200">
+    <header className="sticky top-0 z-50 bg-white/80 backdrop-blur-2xl border-b border-slate-100 shadow-sm">
 
       <div className="max-w-7xl mx-auto px-6">
 
@@ -42,22 +42,35 @@ export default function Navbar() {
 
           {/* Logo */}
           <Link
-            href="/"
-            className="flex items-center gap-3"
-          >
-            <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-blue-600 to-purple-600 flex items-center justify-center text-white text-xl font-bold shadow-lg">
-              📅
-            </div>
+  href="/"
+  className="flex items-center gap-4"
+>
+  {/* Logo */}
+  <div className="relative flex items-center justify-center w-12 h-12 rounded-2xl bg-gradient-to-br from-indigo-600 via-purple-600 to-pink-500 shadow-lg shadow-purple-300">
+    <span className="text-xl font-bold text-white">
+      EH
+    </span>
 
-            <div>
+    <Sparkles className="absolute -top-1 -right-1 w-4 h-4 text-yellow-300" />
+  </div>
 
-              <h2 className="text-2xl font-bold text-slate-900">
-                EventHub
-              </h2>
+  {/* Brand */}
+  <div>
+    <h2 className="text-2xl font-extrabold tracking-tight leading-none">
+      <span className="text-slate-900">
+        Event
+      </span>
 
-            </div>
+      <span className="bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">
+        Hub
+      </span>
+    </h2>
 
-          </Link>
+    <p className="text-xs text-slate-500 mt-1">
+      Manage • Organize • Connect
+    </p>
+  </div>
+</Link>
 
           {/* Desktop Nav */}
           <nav className="hidden md:flex items-center gap-2">
