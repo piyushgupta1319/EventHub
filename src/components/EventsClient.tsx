@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import EventCard from "./EventCard";
-import { Search } from "lucide-react";
+import { Search, Sparkles, Calendar } from "lucide-react";
 
 interface Event {
   id: string;
@@ -44,198 +44,112 @@ export default function EventsClient({ events }: Props) {
   });
 
   return (
-  <div className="min-h-screen bg-slate-100">
+    <div className="min-h-screen bg-gradient-to-b from-slate-50 to-slate-100">
 
-    <div className="max-w-7xl mx-auto px-6 py-10">
+      {/* Hero Section - Matching Home Page */}
+      <section className="relative overflow-hidden bg-gradient-to-br from-blue-600 via-purple-600 to-pink-600 text-white py-24 px-4">
+        {/* Animated Background */}
+        <div className="absolute inset-0 opacity-10">
+          <div className="absolute top-20 left-10 w-72 h-72 bg-white rounded-full mix-blend-multiply filter blur-3xl animate-blob"></div>
+          <div className="absolute top-40 right-10 w-72 h-72 bg-pink-300 rounded-full mix-blend-multiply filter blur-3xl animate-blob animation-delay-2000"></div>
+          <div className="absolute -bottom-8 left-1/2 w-72 h-72 bg-blue-300 rounded-full mix-blend-multiply filter blur-3xl animate-blob animation-delay-4000"></div>
+        </div>
 
-      {/* Hero */}
-      <div
-        className="
-        rounded-[40px]
-        bg-gradient-to-br
-        from-slate-900
-        via-blue-900
-        to-violet-900
-        text-white
-        p-12
-        shadow-xl
-        "
-      >
-
-        <div className="text-center">
-
-          <h1 className="text-5xl md:text-6xl font-bold mb-5">
-            Find Amazing Events
+        <div className="relative max-w-7xl mx-auto">
+          <div className="flex items-center gap-2 mb-6 justify-center md:justify-start">
+            <Calendar size={24} />
+            <span className="text-blue-100 font-semibold">Explore Events</span>
+          </div>
+          
+          <h1 className="text-6xl md:text-7xl font-bold mb-6 leading-tight">
+            Find Amazing <span className="bg-gradient-to-r from-yellow-200 to-pink-200 bg-clip-text text-transparent">Events</span>
           </h1>
-
-          <p className="text-lg text-slate-300 max-w-3xl mx-auto">
-            Explore hackathons, workshops, seminars and competitions
-            happening across the campus.
+          
+          <p className="text-xl md:text-2xl text-blue-100 mb-12 max-w-3xl">
+            Explore hackathons, workshops, seminars and competitions happening across campus
           </p>
 
           {/* Stats */}
-          <div className="grid grid-cols-3 gap-8 mt-12 max-w-2xl mx-auto">
-
-            <div>
-              <h2 className="text-4xl font-bold">
-                {events.length}+
-              </h2>
-
-              <p className="text-slate-400 mt-2">
-                Events
-              </p>
-            </div>
-
-            <div>
-              <h2 className="text-4xl font-bold">
-                3000+
-              </h2>
-
-              <p className="text-slate-400 mt-2">
-                Students
-              </p>
-            </div>
-
-            <div>
-              <h2 className="text-4xl font-bold">
-                25+
-              </h2>
-
-              <p className="text-slate-400 mt-2">
-                Categories
-              </p>
-            </div>
-
+          <div className="grid md:grid-cols-3 gap-8 mb-12 max-w-2xl">
+            {[
+              { label: 'Events', value: `${events.length}+` },
+              { label: 'Students', value: '3000+' },
+              { label: 'Categories', value: '25+' },
+            ].map((stat, i) => (
+              <div key={i} className="bg-white/10 backdrop-blur-sm rounded-xl p-6 border border-white/20">
+                <p className="text-blue-100 text-sm mb-2">{stat.label}</p>
+                <h3 className="text-4xl font-bold">{stat.value}</h3>
+              </div>
+            ))}
           </div>
 
           {/* Search */}
-          <div className="flex justify-center mt-12">
-
-            <div className="relative w-full max-w-lg">
-
-              <Search
-                size={18}
-                className="
-                absolute
-                left-4
-                top-1/2
-                -translate-y-1/2
-                text-slate-400
-                "
-              />
-
-              <input
-                type="text"
-                placeholder="Search events..."
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                className="
-                w-full
-                h-12
-                pl-12
-                pr-5
-                rounded-2xl
-                bg-white
-                border
-                border-slate-300
-                text-slate-800
-                placeholder:text-slate-400
-                shadow-sm
-                focus:outline-none
-                focus:ring-4
-                focus:ring-blue-200
-                focus:border-blue-500
-                "
-              />
-
-            </div>
-
+          <div className="relative max-w-2xl">
+            <Search
+              size={20}
+              className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400"
+            />
+            <input
+              type="text"
+              placeholder="Search events by name or description..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="w-full h-14 pl-12 pr-5 rounded-xl bg-white border border-slate-200 text-slate-900 placeholder:text-slate-400 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+            />
           </div>
 
           {/* Categories */}
-          <div className="flex flex-wrap justify-center gap-4 mt-10">
-
+          <div className="flex flex-wrap gap-3 mt-8 md:mt-12">
             {categories.map((category) => (
-
               <button
                 key={category}
                 onClick={() => setSelectedCategory(category)}
-                className={`px-6 py-3 rounded-full font-semibold transition
-                ${
+                className={`px-6 py-3 rounded-full font-semibold transition-all duration-300 transform hover:scale-105 ${
                   selectedCategory === category
-                    ? "bg-blue-600 text-white shadow-lg"
-                    : "bg-white text-slate-700 border border-slate-200 hover:bg-slate-50"
+                    ? "bg-white text-blue-600 shadow-lg"
+                    : "bg-white/20 text-white border border-white/30 hover:bg-white/30"
                 }`}
               >
                 {category}
               </button>
-
             ))}
-
           </div>
-
         </div>
+      </section>
 
-      </div>
-
-      {/* Cards */}
-      <div
-        className="
-        grid
-        sm:grid-cols-1
-        md:grid-cols-2
-        xl:grid-cols-3
-        gap-8
-        mt-16
-        "
-      >
-
-        {filteredEvents.map((event) => (
-
-          <EventCard
-            key={event.id}
-            id={event.id}
-            title={event.title}
-            date={new Date(event.eventDate).toLocaleDateString("en-GB")}
-            time={new Date(event.eventDate).toLocaleTimeString("en-US", {
-              hour: "2-digit",
-              minute: "2-digit",
-            })}
-            location={event.location}
-            category={event.category}
-            participants={event.participants}
-            capacity={event.capacity}
-            organizer="EventHub"
-            gradientFrom="from-blue-500"
-            gradientTo="to-purple-600"
-          />
-
-        ))}
-
-        {filteredEvents.length === 0 && (
-
-          <div className="col-span-full">
-
-            <div className="bg-white rounded-3xl p-16 text-center shadow-sm">
-
-              <h2 className="text-3xl font-bold text-slate-900">
-                No Events Found
-              </h2>
-
-              <p className="text-slate-500 mt-4">
-                Try changing search or category filters.
-              </p>
-
-            </div>
-
+      {/* Events Grid */}
+      <div className="max-w-7xl mx-auto px-4 md:px-8 py-16">
+        {filteredEvents.length === 0 ? (
+          <div className="bg-white rounded-3xl border border-slate-200 shadow-sm p-16 text-center">
+            <Calendar size={48} className="text-slate-300 mx-auto mb-4" />
+            <h2 className="text-3xl font-bold text-slate-900 mb-2">No Events Found</h2>
+            <p className="text-slate-500 text-lg">Try changing your search or filter to find more events</p>
           </div>
-
+        ) : (
+          <div className="grid sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {filteredEvents.map((event) => (
+              <EventCard
+                key={event.id}
+                id={event.id}
+                title={event.title}
+                date={new Date(event.eventDate).toLocaleDateString("en-GB")}
+                time={new Date(event.eventDate).toLocaleTimeString("en-US", {
+                  hour: "2-digit",
+                  minute: "2-digit",
+                })}
+                location={event.location}
+                category={event.category}
+                participants={event.participants}
+                capacity={event.capacity}
+                organizer="EventHub"
+                gradientFrom="from-blue-500"
+                gradientTo="to-purple-600"
+              />
+            ))}
+          </div>
         )}
-
       </div>
 
     </div>
-
-  </div>
-);
+  );
 }
