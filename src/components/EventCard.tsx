@@ -51,6 +51,7 @@ export default function EventCard({
   const [participantsCount, setParticipantsCount] = useState<number>(participants);
   const [isRegistering, setIsRegistering] = useState(false);
   const [isRegistered, setIsRegistered] = useState(false);
+  const [errorMessage, setErrorMessage] = useState<string>('');
 
   const percentage = Math.min((participantsCount / capacity) * 100, 100);
   const categoryStyle = categoryGradients[category] || categoryGradients.default;
@@ -65,6 +66,7 @@ export default function EventCard({
     if (isRegistered || isRegistering) return;
 
     setIsRegistering(true);
+    setErrorMessage('');
 
     try {
       const res = await fetch('/api/register', {
@@ -78,12 +80,15 @@ export default function EventCard({
       if (data.success) {
         setParticipantsCount((p) => p + 1);
         setIsRegistered(true);
+        alert('✅ Registration successful!');
+      } else {
+        setErrorMessage(data.message || 'Registration failed');
+        alert(data.message || 'Registration failed. Please try again.');
       }
-
-      alert(data.message);
     } catch (err) {
       console.error(err);
-      alert('Registration failed');
+      setErrorMessage('Connection error. Please try again.');
+      alert('Connection error. Please try again.');
     } finally {
       setIsRegistering(false);
     }

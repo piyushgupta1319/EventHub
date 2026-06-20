@@ -20,16 +20,39 @@ export async function POST(req: NextRequest) {
 
     const userId = session.user.id as string;
 
+    if (!userId) {
+      return NextResponse.json({ success: false, message: "User ID not found in session" }, { status: 400 });
+    }
+
+    // Verify user exists
+    const userExists = await prisma.user.findUnique({
+      where: { id: userId },
+    });
+
+    if (!userExists) {
+      return NextResponse.json({ success: false, message: "User not found" }, { status: 404 });
+    }
+
+    // Verify event exists
+    const eventExists = await prisma.event.findUnique({
+      where: { id: eventId },
+    });
+
+    if (!eventExists) {
+      return NextResponse.json({ success: false, message: "Event not found" }, { status: 404 });
+    }
+
     // Prevent duplicate registration
     const existing = await prisma.registration.findUnique({
       where: { userId_eventId: { userId, eventId } },
     });
 
     if (existing) {
-      return NextResponse.json({ success: false, message: "Already registered" }, { status: 200 });
+      return NextResponse.json({ success: false, message: "Already registered for this event" }, { status: 200 });
     }
 
     await prisma.registration.create({ data: { userId, eventId } });
+    
     // Revalidate event pages and dashboard so counts update
     try {
       revalidatePath(`/events/${eventId}`);
@@ -44,7 +67,14 @@ export async function POST(req: NextRequest) {
   } catch (err: any) {
     console.error("/api/register error:", err);
 
-    // Prisma unique constraint or foreign key errors will show here
-    return NextResponse.json({ success: false, message: String(err) }, { status: 500 });
+    // Better error messages for debugging
+    if (err.code === 'P2002') {
+      return NextResponse.json({ success: false, message: "Already registered for this event" }, { status: 409 });
+    }
+    if (err.code === 'P2025') {
+      return NextResponse.json({ success: false, message: "User or event not found" }, { status: 404 });
+    }
+
+    return NextResponse.json({ success: false, message: "Registration failed. Please try again." }, { status: 500 });
   }
 }
