@@ -23,11 +23,11 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       clientSecret: process.env.AUTH_GOOGLE_SECRET!,
       allowDangerousEmailAccountLinking: true,
     }),
-    // Facebook({
-    //   clientId: process.env.AUTH_FACEBOOK_ID!,
-    //   clientSecret: process.env.AUTH_FACEBOOK_SECRET!,
-    //   allowDangerousEmailAccountLinking: true,
-    // }),
+    Facebook({
+      clientId: process.env.AUTH_FACEBOOK_ID!,
+      clientSecret: process.env.AUTH_FACEBOOK_SECRET!,
+      allowDangerousEmailAccountLinking: true,
+    }),
     Credentials({
       credentials: {
         email: {},
